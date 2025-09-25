@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,9 +20,12 @@ import {
   FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  const router = useRouter();
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,8 +33,30 @@ export default function Page() {
     },
   });
 
-  const onSubmit = (data: FormType) => {
-    console.log(data);
+  const onSubmit = async (data: FormType) => {
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+        }),
+      });
+
+      if (!res.ok) {
+        Toast("error", "Gửi yêu cầu đặt lại mật khẩu thất bại");
+        return;
+      }
+
+      Toast(
+        "success",
+        "OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư",
+      );
+
+      router.push(`/reset-password?email=${encodeURIComponent(data.email)}`);
+    } catch {
+      Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
+    }
   };
 
   return (
@@ -63,7 +89,12 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            size="lg"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+          >
             Tiếp tục
           </Button>
         </form>
