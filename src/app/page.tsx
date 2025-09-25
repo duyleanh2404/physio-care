@@ -1,3 +1,5 @@
+import AuthGuard from "@/components/guards/AuthGuard";
+
 export default function Home() {
-  return <main>Home</main>;
+  return <AuthGuard>Home</AuthGuard>;
 }
