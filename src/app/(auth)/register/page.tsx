@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,10 +16,13 @@ import {
   FormMessage,
   FormControl,
 } from "@/components/ui/form";
+import { Toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  const router = useRouter();
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,8 +33,25 @@ export default function Page() {
     },
   });
 
-  const onSubmit = (data: FormType) => {
-    console.log(data);
+  const onSubmit = async ({ fullName, email, password }: FormType) => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, password }),
+      });
+
+      if (!res.ok) {
+        Toast("error", "Đăng ký thất bại");
+        return;
+      }
+
+      Toast("success", "Đăng ký thành công! Vui lòng xác thực email");
+
+      router.push(`/verify?email=${encodeURIComponent(email)}`);
+    } catch {
+      Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
+    }
   };
 
   return (
@@ -110,7 +131,12 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            size="lg"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+          >
             Đăng ký tài khoản
           </Button>
         </form>

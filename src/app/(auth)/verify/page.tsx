@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -18,9 +21,16 @@ import {
   InputOTPSlot,
   InputOTPGroup,
 } from "@/components/ui/input-otp";
+import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const email = searchParams.get("email") || "";
+  const [isResending, setIsResending] = useState(false);
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,8 +38,47 @@ export default function Page() {
     },
   });
 
-  const onSubmit = (data: FormType) => {
-    console.log(data);
+  const resendOtp = async () => {
+    setIsResending(true);
+    try {
+      const res = await fetch("/api/auth/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        Toast("error", "Gửi lại OTP thất bại");
+        setIsResending(false);
+        return;
+      }
+
+      Toast("success", "OTP đã được gửi lại vào email của bạn");
+    } catch {
+      Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const onSubmit = async (data: FormType) => {
+    try {
+      const res = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp: data.otp, email }),
+      });
+
+      if (!res.ok) {
+        Toast("error", "Mã xác thực không hợp lệ hoặc đã hết hạn");
+        return;
+      }
+
+      Toast("success", "Xác thực thành công!");
+      router.push("/login");
+    } catch {
+      Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
+    }
   };
 
   return (
@@ -40,9 +89,11 @@ export default function Page() {
           <p>Chưa nhận được mã?</p>
           <button
             type="button"
+            onClick={resendOtp}
+            disabled={isResending}
             className="text-primary hover:underline cursor-pointer"
           >
-            Gửi lại ngay!
+            {isResending ? "Đang gửi..." : "Gửi lại ngay!"}
           </button>
         </div>
       </div>
@@ -74,7 +125,12 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            size="lg"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+          >
             Tiếp tục
           </Button>
         </form>

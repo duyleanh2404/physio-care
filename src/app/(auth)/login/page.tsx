@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,9 +17,12 @@ import {
   FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  const router = useRouter();
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,8 +31,34 @@ export default function Page() {
     },
   });
 
-  const onSubmit = (data: FormType) => {
-    console.log(data);
+  const onSubmit = async (data: FormType) => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          Toast("error", "Sai email hoặc mật khẩu");
+        } else if (res.status === 403) {
+          Toast(
+            "warning",
+            "Tài khoản chưa xác minh. OTP đã được gửi tới email",
+          );
+          router.push(`/verify?email=${encodeURIComponent(data.email)}`);
+        } else {
+          Toast("error", "Có lỗi xảy ra");
+        }
+        return;
+      }
+
+      Toast("success", "Đăng nhập thành công!");
+      router.replace("/");
+    } catch {
+      Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
+    }
   };
 
   return (
@@ -86,7 +116,12 @@ export default function Page() {
               Quên mật khẩu?
             </Link>
           </div>
-          <Button type="submit" size="lg" className="w-full">
+          <Button
+            size="lg"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+          >
             Đăng nhập tài khoản
           </Button>
         </form>

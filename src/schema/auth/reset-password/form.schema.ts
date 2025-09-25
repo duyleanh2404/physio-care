@@ -2,6 +2,9 @@ import z from "zod";
 
 export const formSchema = z
   .object({
+    otp: z.string().nonempty("Vui lòng nhập mã xác thực").min(6, {
+      message: "Mã xác thực phải đầy đủ 6 số",
+    }),
     newPassword: z
       .string()
       .nonempty("Vui lòng nhập mật khẩu mới")
