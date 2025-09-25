@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -122,7 +123,10 @@ export default function Page() {
             disabled={form.formState.isSubmitting}
             className="w-full"
           >
-            Đăng nhập tài khoản
+            {form.formState.isSubmitting && (
+              <Loader2 className="size-4 animate-spin" />
+            )}
+            <span>Đăng nhập tài khoản</span>
           </Button>
         </form>
       </Form>

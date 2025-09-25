@@ -26,19 +26,19 @@ export async function POST(req: Request) {
     const isProd = process.env.NODE_ENV === "production";
 
     response.cookies.set("accessToken", data.accessToken, {
+      path: "/",
       httpOnly: true,
       secure: isProd,
-      path: "/",
       maxAge: 60 * 15,
       sameSite: "strict",
     });
 
     response.cookies.set("refreshToken", data.refreshToken, {
-      httpOnly: true,
-      secure: isProd,
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      secure: isProd,
+      httpOnly: true,
       sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;
