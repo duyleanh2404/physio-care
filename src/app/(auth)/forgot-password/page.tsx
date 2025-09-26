@@ -11,6 +11,7 @@ import {
   formSchema,
   type FormType,
 } from "@/schema/auth/forgot-password/form.schema";
+import { useAuthStore } from "@/store/use-auth.store";
 
 import {
   Form,
@@ -26,6 +27,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Page() {
   const router = useRouter();
+
+  const { setResetPasswordStep } = useAuthStore();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -53,6 +56,8 @@ export default function Page() {
         "success",
         "OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư",
       );
+
+      setResetPasswordStep(true);
 
       router.push(`/reset-password?email=${encodeURIComponent(data.email)}`);
     } catch {

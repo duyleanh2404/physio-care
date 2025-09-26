@@ -5,9 +5,10 @@ import Image from "next/image";
 
 import { useMe } from "@/react-query/query/users/useMe";
 
+import { Button } from "@/components/ui/button";
+
 import { Hint } from "../Hint";
 import { UserButton } from "../UserButton";
-import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "../LoadingSpinner";
 
 export function Header() {
@@ -23,7 +24,7 @@ export function Header() {
           </Link>
         </Hint>
         {isPending ? (
-          <LoadingSpinner size={6} />
+          <LoadingSpinner size={5} />
         ) : user ? (
           <UserButton user={user} />
         ) : (
