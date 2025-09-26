@@ -3,6 +3,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { useAuthStore } from "@/store/use-auth.store";
+
 import { LoadingSpinner } from "../global/LoadingSpinner";
 
 type TokenGuardProps = {
@@ -12,6 +14,8 @@ type TokenGuardProps = {
 export function TokenGuard({ children }: TokenGuardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const { setLoggedIn } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,6 +36,7 @@ export function TokenGuard({ children }: TokenGuardProps) {
 
           if (!res.ok) throw new Error("Failed to set tokens");
 
+          setLoggedIn(true);
           router.replace("/");
         } catch (error) {
           console.error(error);
@@ -44,7 +49,7 @@ export function TokenGuard({ children }: TokenGuardProps) {
     } else {
       setIsLoading(false);
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, setLoggedIn]);
 
   if (isLoading) {
     return (
