@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useAuthStore } from "@/store/use-auth.store";
 import { formSchema, type FormType } from "@/schema/auth/login/form.schema";
 
 import {
@@ -23,6 +24,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Page() {
   const router = useRouter();
+
+  const { setLoggedIn, setVerifyStep } = useAuthStore();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -48,6 +51,8 @@ export default function Page() {
             "warning",
             "Tài khoản chưa xác minh. OTP đã được gửi tới email",
           );
+
+          setVerifyStep(true);
           router.push(`/verify?email=${encodeURIComponent(data.email)}`);
         } else {
           Toast("error", "Có lỗi xảy ra");
@@ -56,6 +61,10 @@ export default function Page() {
       }
 
       Toast("success", "Đăng nhập thành công!");
+
+      setLoggedIn(true);
+      setVerifyStep(false);
+
       router.replace("/");
     } catch {
       Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");

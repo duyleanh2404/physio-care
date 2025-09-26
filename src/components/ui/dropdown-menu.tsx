@@ -26,7 +26,7 @@ function DropdownMenuTrigger({
   return (
     <DropdownMenuPrimitive.Trigger
       data-slot="dropdown-menu-trigger"
-      className="cursor-pointer"
+      className="cursor-pointer select-none"
       {...props}
     />
   );

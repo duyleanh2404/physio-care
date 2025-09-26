@@ -2,8 +2,9 @@
 
 import { Suspense } from "react";
 
+import { TokenGuard } from "@/components/guards/TokenGuard";
+
 import { Header } from "@/components/global/Header";
-import { AuthGuard } from "@/components/guards/AuthGuard";
 import { LoadingSpinner } from "@/components/global/LoadingSpinner";
 
 export default function Home() {
@@ -16,9 +17,9 @@ export default function Home() {
         />
       }
     >
-      <AuthGuard>
+      <TokenGuard>
         <Header />
-      </AuthGuard>
+      </TokenGuard>
     </Suspense>
   );
 }
