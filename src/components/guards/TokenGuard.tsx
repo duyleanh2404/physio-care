@@ -28,16 +28,19 @@ export function TokenGuard({ children }: TokenGuardProps) {
         try {
           const res = await fetch("/api/auth/set-tokens", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ accessToken, refreshToken }),
           });
 
           if (!res.ok) throw new Error("Failed to set tokens");
 
           setLoggedIn(true);
-          router.replace("/");
+
+          const url = new URL(window.location.href);
+          url.searchParams.delete("accessToken");
+          url.searchParams.delete("refreshToken");
+
+          router.replace(url.pathname + url.search);
         } catch (error) {
           console.error(error);
         } finally {
