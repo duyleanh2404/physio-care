@@ -47,7 +47,12 @@ export function AuthGuard({ children }: AuthGuardProps) {
   }, [searchParams, router]);
 
   if (isLoading) {
-    return <LoadingSpinner className="h-screen" />;
+    return (
+      <LoadingSpinner
+        size={10}
+        className="h-screen flex justify-center items-center"
+      />
+    );
   }
 
   return <>{children}</>;

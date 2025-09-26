@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <section className="wrapper max-w-[400px] min-h-screen flex flex-col items-center justify-center gap-6 py-10 mx-auto">
       <Hint content="Trang chủ">
         <Link href="/" className="flex items-center gap-3">
-          <Image src={"/logo.svg"} alt="Logo" width={40} height={40} />
+          <Image src={"/logo.svg"} alt="Logo" width={35} height={35} />
           <h1 className="text-2xl font-extrabold">PhysioCare</h1>
         </Link>
       </Hint>

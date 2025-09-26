@@ -119,6 +119,10 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  header {
+    @apply h-[60px] sticky top-0 left-0 border-b shadow-sm bg-white z-50;
+  }
 }
 
 @layer components {
