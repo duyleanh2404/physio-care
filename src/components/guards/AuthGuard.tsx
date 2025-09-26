@@ -3,13 +3,13 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { Loader2 } from "lucide-react";
+import { LoadingSpinner } from "../global/LoadingSpinner";
 
 type AuthGuardProps = {
   children: ReactNode;
 };
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -47,11 +47,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }, [searchParams, router]);
 
   if (isLoading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <Loader2 className="size-10 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingSpinner className="h-screen" />;
   }
 
   return <>{children}</>;
