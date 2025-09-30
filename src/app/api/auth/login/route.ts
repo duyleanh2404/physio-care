@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     }
 
     const response = NextResponse.json(
-      { message: "Login successful" },
+      { message: "Login successful", user: data.user },
       { status: 200 },
     );
 
@@ -29,7 +29,6 @@ export async function POST(req: Request) {
       path: "/",
       httpOnly: true,
       secure: isProd,
-      maxAge: 60 * 15,
       sameSite: "strict",
     });
 

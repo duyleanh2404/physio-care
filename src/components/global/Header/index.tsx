@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 
 import { Hint } from "../Hint";
 import { UserButton } from "../UserButton";
+import { ThemeToggle } from "../ThemeToggle";
 import { LoadingSpinner } from "../LoadingSpinner";
 
 export function Header() {
@@ -23,15 +24,18 @@ export function Header() {
             <h1 className="text-xl font-extrabold">PhysioCare</h1>
           </Link>
         </Hint>
-        {isPending ? (
-          <LoadingSpinner size={5} />
-        ) : user ? (
-          <UserButton user={user} />
-        ) : (
-          <Button asChild>
-            <Link href={"/login"}>Đăng nhập</Link>
-          </Button>
-        )}
+        <div className="flex items-center gap-3">
+          {isPending ? (
+            <LoadingSpinner size={5} />
+          ) : user ? (
+            <UserButton user={user} />
+          ) : (
+            <Button asChild>
+              <Link href={"/login"}>Đăng nhập</Link>
+            </Button>
+          )}
+          <ThemeToggle className="size-9.5" />
+        </div>
       </div>
     </header>
   );

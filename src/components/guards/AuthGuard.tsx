@@ -4,25 +4,28 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/store/use-auth.store";
-
 import { LoadingSpinner } from "@/components/global/LoadingSpinner";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const { isLoggedIn, isHydrated } = useAuthStore();
-
   const [isChecking, setIsChecking] = useState(true);
+
+  const { isLoggedIn, isHydrated, isAdmin } = useAuthStore();
 
   useEffect(() => {
     if (!isHydrated) return;
 
     if (isLoggedIn) {
-      router.replace("/");
+      if (isAdmin) {
+        router.replace("/admin/dashboard");
+      } else {
+        router.replace("/");
+      }
     } else {
       setIsChecking(false);
     }
-  }, [isLoggedIn, isHydrated, router]);
+  }, [isLoggedIn, isHydrated, isAdmin, router]);
 
   if (!isHydrated || isChecking) {
     return (

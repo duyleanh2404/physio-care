@@ -16,6 +16,7 @@ export async function POST() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      credentials: "include",
     });
 
     const data = await res.json();
