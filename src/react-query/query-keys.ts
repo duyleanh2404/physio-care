@@ -1,5 +1,6 @@
 export const queryKeys = {
   users: {
-    me: ["me"],
+    me: ["users", "me"] as const,
+    list: (params?: Record<string, any>) => ["users", "list", params] as const,
   },
 };

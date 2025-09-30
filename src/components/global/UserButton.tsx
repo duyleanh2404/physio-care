@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import type { User } from "@/types/users";
+import { UserRole } from "@/config.global";
 import { queryKeys } from "@/react-query/query-keys";
 import { useAuthStore } from "@/store/use-auth.store";
 
@@ -38,16 +39,19 @@ export function UserButton({ user }: { user: User }) {
       } else {
         Toast("error", "Đăng xuất thất bại");
       }
-    } catch (error) {
+    } catch {
       Toast("error", "Có lỗi xảy ra");
-      console.error(error);
     }
+  };
+
+  const goToDashboard = () => {
+    router.push("/admin/dashboard");
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="size-9">
+        <Avatar className="size-8.5">
           <AvatarImage src={user.avatarUrl ?? undefined} />
           <AvatarFallback>
             {user.fullName.charAt(0).toUpperCase()}
@@ -70,6 +74,26 @@ export function UserButton({ user }: { user: User }) {
         </div>
 
         <DropdownMenuSeparator />
+
+        {user.role === UserRole.ADMIN && (
+          <>
+            <DropdownMenuItem
+              onClick={goToDashboard}
+              className="group flex items-center gap-2 text-[13px] hover:!bg-primary/10 transition-smooth"
+            >
+              <Icon
+                width="18"
+                height="18"
+                icon="mdi:view-dashboard"
+                className="group-hover:text-primary transition-smooth"
+              />
+              <span className="group-hover:text-primary transition-smooth">
+                Dashboard
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
 
         <DropdownMenuItem
           variant="destructive"

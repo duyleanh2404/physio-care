@@ -5,6 +5,7 @@ import { Hint } from "@/components/global/Hint";
 import { Separator } from "@/components/ui/separator";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import { ContinueWithGoogle } from "@/components/auth/ContinueWithGoogle";
+import { ThemeToggle } from "@/components/global/ThemeToggle";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <div className="w-full relative">
           <Separator orientation="horizontal" />
-          <p className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-sm px-2 bg-white">
+          <p className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-sm px-2 bg-background">
             hoặc
           </p>
         </div>
@@ -38,6 +39,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Chính sách bảo mật
           </Link>{" "}
           của PhysioCare.
+        </div>
+
+        <div className="fixed top-3 right-3">
+          <ThemeToggle className="size-9" />
         </div>
       </section>
     </AuthGuard>
