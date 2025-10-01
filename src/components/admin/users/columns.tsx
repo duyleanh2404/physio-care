@@ -76,7 +76,7 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="flex justify-center">
           <Avatar className="w-8 h-8">
-            <AvatarImage src={avatarUrl || ""} alt={fullName} />
+            <AvatarImage src={avatarUrl || undefined} alt={fullName} />
             <AvatarFallback>{fullName?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>

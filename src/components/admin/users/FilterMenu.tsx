@@ -104,12 +104,12 @@ export function FilterMenu() {
           size="sm"
           variant="outline"
           className={cn(
-            "w-full sm:w-fit flex items-center gap-2",
+            "w-full lg:w-fit flex items-center gap-2",
             hasActiveFilters &&
               "text-primary hover:text-primary !bg-primary/20",
           )}
         >
-          <Filter className="w-4 h-4" />
+          <Filter className="w-4 h-4 dark:text-white transition-smooth" />
           Lọc
         </Button>
       </DropdownMenuTrigger>
@@ -117,7 +117,7 @@ export function FilterMenu() {
       <DropdownMenuContent
         align="end"
         style={{ maxWidth: "fit-content" }}
-        className="p-6 grid grid-cols-[auto_auto_auto] gap-y-6 gap-x-12"
+        className="p-6 grid grid-cols-1 sm:grid-cols-[auto_auto_auto] gap-y-6 gap-x-12"
       >
         {renderCheckboxGroup("Trạng thái", STATUS_OPTIONS, status, setStatus)}
         {renderCheckboxGroup("Vai trò", ROLE_OPTIONS, role, setRole)}

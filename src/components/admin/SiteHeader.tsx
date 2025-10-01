@@ -29,7 +29,7 @@ export function SiteHeader() {
   const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <header className="sticky top-0 w-full h-[45px] flex items-center border-b bg-background z-50">
+    <header className="sticky top-0 w-full flex items-center border-b bg-background z-50">
       <div className="w-full h-full flex items-center gap-2 px-4">
         <Button
           size="icon"
@@ -71,12 +71,12 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center space-x-2">
           <Hint content="Thông báo">
-            <Button size="icon" variant="outline" className="size-8">
+            <Button size="icon" variant="outline" className="size-9">
               <Bell />
             </Button>
           </Hint>
 
-          <ThemeToggle />
+          <ThemeToggle className="size-9" />
         </div>
       </div>
     </header>

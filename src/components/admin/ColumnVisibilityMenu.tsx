@@ -16,7 +16,7 @@ export function ColumnVisibilityMenu({ table }: { table: Table<User> }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="outline" className="hidden sm:flex gap-2">
+          <Button variant="outline" size="sm" className="hidden sm:flex gap-2">
             <Settings2 className="w-4 h-4" />
             Cột hiển thị
             <ChevronDown className="w-4 h-4" />
