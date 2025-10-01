@@ -57,6 +57,16 @@ const data = {
       ],
     },
     {
+      title: "Quản lý bác sĩ",
+      url: "/admin/doctors",
+      icon: User,
+      items: [
+        { title: "Danh sách bác sĩ", url: "/admin/doctors" },
+        { title: "Chuyên khoa", url: "/admin/doctors/specialties" },
+        { title: "Lịch làm việc", url: "/admin/doctors/schedule" },
+      ],
+    },
+    {
       title: "Buổi trị liệu",
       url: "/admin/sessions",
       icon: SquareTerminal,

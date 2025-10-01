@@ -51,7 +51,7 @@ export default function Page() {
     status,
     dateTo,
     dateFrom,
-    role: UserRole.USER,
+    role: UserRole.DOCTOR,
   });
 
   const [rowSelection, setRowSelection] = useState({});
@@ -97,7 +97,7 @@ export default function Page() {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
-        <SearchInput placeholder="Tìm kiếm theo tên bệnh nhân" />
+        <SearchInput placeholder="Tìm kiếm theo tên bác sĩ" />
 
         <div className="flex items-center flex-row md:flex-row-reverse lg:flex-row gap-2 ml-auto">
           <FilterMenu />
