@@ -14,12 +14,13 @@ import {
 import { Plus, MoreHorizontal } from "lucide-react";
 import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
+import { UserRole } from "@/config.global";
 import { useUsers } from "@/react-query/query/users/useUsers";
 
 import { DataTable } from "@/components/admin/DataTable";
-import { columns } from "@/components/admin/users/columns";
+import { columns } from "@/components/admin/patients/columns";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { FilterMenu } from "@/components/admin/users/FilterMenu";
+import { FilterMenu } from "@/components/admin/patients/FilterMenu";
 import { ModalCreateUser } from "@/components/modals/admin/users/Create";
 import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
 import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
@@ -40,19 +41,18 @@ export default function Page() {
   const [search] = useQueryState("search", parseAsString.withDefault(""));
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
-  const [role] = useQueryState("role", parseAsString.withDefault(""));
   const [status] = useQueryState("status", parseAsString.withDefault(""));
   const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
   const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
 
   const { data } = useUsers({
     page,
-    role,
     limit,
     search,
     status,
     dateTo,
     dateFrom,
+    role: UserRole.USER,
   });
 
   const [rowSelection, setRowSelection] = useState({});
@@ -98,19 +98,10 @@ export default function Page() {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
-        <SearchInput placeholder="Tìm kiếm theo tên người dùng" />
+        <SearchInput placeholder="Tìm kiếm theo tên bệnh nhân" />
 
         <div className="flex items-center flex-row md:flex-row-reverse lg:flex-row gap-2 ml-auto">
-          <div className="hidden lg:flex items-center gap-2">
-            <ModalCreateUser>
-              <Button size="sm" className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Tạo người dùng
-              </Button>
-            </ModalCreateUser>
-
-            <FilterMenu />
-          </div>
+          <FilterMenu />
 
           <div className="flex lg:hidden">
             <DropdownMenu>

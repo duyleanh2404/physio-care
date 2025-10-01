@@ -9,7 +9,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 
 import { Input } from "@/components/ui/input";
 
-export function SearchInput() {
+export function SearchInput({ placeholder }: { placeholder: string }) {
   const [search, setSearch] = useQueryState("search", {
     shallow: false,
     history: "push",
@@ -33,7 +33,7 @@ export function SearchInput() {
       <Input
         value={inputValue}
         onChange={handleChange}
-        placeholder="Tìm kiếm theo tên người dùng"
+        placeholder={placeholder}
         className="h-8 pl-8.5"
       />
       <Search className="absolute top-1/2 left-3 -translate-y-1/2 size-4 opacity-50" />
