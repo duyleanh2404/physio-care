@@ -20,7 +20,7 @@ export function SearchInput() {
 
   useEffect(() => {
     if (debouncedSearch !== search) {
-      setSearch(debouncedSearch || null);
+      setSearch(debouncedSearch);
     }
   }, [debouncedSearch, search, setSearch]);
 
@@ -34,7 +34,7 @@ export function SearchInput() {
         value={inputValue}
         onChange={handleChange}
         placeholder="Tìm kiếm theo tên người dùng"
-        className="pl-8.5"
+        className="h-8 pl-8.5"
       />
       <Search className="absolute top-1/2 left-3 -translate-y-1/2 size-4 opacity-50" />
     </div>

@@ -37,7 +37,7 @@ export function TablePaginationControls({ table }: { table: Table<User> }) {
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger size="sm" id="rows-per-page" className="w-20">
+            <SelectTrigger size="sm" id="rows-per-page" className="w-20 h-8">
               <SelectValue
                 placeholder={`${table.getState().pagination.pageSize}`}
               />

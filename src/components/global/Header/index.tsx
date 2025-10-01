@@ -34,7 +34,7 @@ export function Header() {
               <Link href={"/login"}>Đăng nhập</Link>
             </Button>
           )}
-          <ThemeToggle className="size-9.5" />
+          <ThemeToggle className="size-9" />
         </div>
       </div>
     </header>

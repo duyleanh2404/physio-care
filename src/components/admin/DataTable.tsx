@@ -12,16 +12,10 @@ import {
   TableHeader,
   Table as BaseTable,
 } from "@/components/ui/table";
-import { TableLoading } from "./TableLoading";
 
-type DataTableProps = {
-  isPending: boolean;
-  table: TanstackTable<User>;
-};
-
-export function DataTable({ table, isPending }: DataTableProps) {
+export function DataTable({ table }: { table: TanstackTable<User> }) {
   return (
-    <div className="h-[calc(100vh-170px)] overflow-hidden rounded-md border overflow-y-auto">
+    <div className="h-[calc(100vh-185px)] overflow-hidden rounded-md border overflow-y-auto">
       <BaseTable
         className={cn(table.getRowModel().rows?.length ? "h-fit" : "h-full")}
       >
@@ -43,9 +37,7 @@ export function DataTable({ table, isPending }: DataTableProps) {
         </TableHeader>
 
         <TableBody>
-          {isPending ? (
-            <TableLoading columns={columns} />
-          ) : table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

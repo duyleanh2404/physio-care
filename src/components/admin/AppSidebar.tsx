@@ -121,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       {...props}
-      className="h-[calc(100svh-var(--header-height))]! top-(--header-height)"
+      className="h-[calc(100svh-var(--header-height))] top-(--header-height)"
     >
       <SidebarHeader>
         <SidebarMenu>

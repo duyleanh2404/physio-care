@@ -50,9 +50,10 @@ async function fetchUsers(
 
 export function useUsers(params: FetchUsersParams = {}) {
   return useQuery<PaginatedResponse<User[]>>({
-    queryKey: queryKeys.users.list(params),
-    queryFn: () => fetchUsers(params),
     retry: false,
     staleTime: 1000 * 60 * 5,
+    placeholderData: (prev) => prev,
+    queryFn: () => fetchUsers(params),
+    queryKey: queryKeys.users.list(params),
   });
 }

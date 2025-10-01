@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -27,9 +28,9 @@ import { TablePaginationControls } from "@/components/admin/TablePaginationContr
 
 import {
   DropdownMenu,
+  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
 export default function Page() {
@@ -45,7 +46,7 @@ export default function Page() {
   const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
   const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
 
-  const { data, isPending } = useUsers({
+  const { data } = useUsers({
     page,
     role,
     limit,
@@ -100,8 +101,8 @@ export default function Page() {
       <div className="flex items-center gap-2 py-4">
         <SearchInput />
 
-        <div className="flex items-center gap-2 ml-auto">
-          <div className="hidden md:flex items-center gap-2">
+        <div className="flex items-center flex-row md:flex-row-reverse lg:flex-row gap-2 ml-auto">
+          <div className="hidden lg:flex items-center gap-2">
             <ModalCreateUser>
               <Button size="sm" className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
@@ -112,7 +113,7 @@ export default function Page() {
             <FilterMenu />
           </div>
 
-          <div className="flex md:hidden">
+          <div className="flex lg:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="outline">
@@ -120,7 +121,7 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
+                <DropdownMenuItem className="focus:[&_svg]:!text-white dark:focus:[&_svg]:!text-white">
                   <ModalCreateUser>
                     <Button
                       size="sm"
@@ -132,7 +133,7 @@ export default function Page() {
                   </ModalCreateUser>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                <DropdownMenuItem className="[&_svg]:!text-black dark:[&_svg]:!text-white focus:[&_svg]:!text-black dark:focus:[&_svg]:!text-white dark:focus:text-white">
                   <FilterMenu />
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -143,7 +144,7 @@ export default function Page() {
         </div>
       </div>
 
-      <DataTable table={table} isPending={isPending} />
+      <DataTable table={table} />
       <TablePaginationControls table={table} />
     </div>
   );
