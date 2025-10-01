@@ -11,7 +11,7 @@ import {
   type VisibilityState,
   type ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Plus, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { UserRole } from "@/config.global";
@@ -21,7 +21,6 @@ import { DataTable } from "@/components/admin/DataTable";
 import { columns } from "@/components/admin/patients/columns";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { FilterMenu } from "@/components/admin/patients/FilterMenu";
-import { ModalCreateUser } from "@/components/modals/admin/users/Create";
 import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
 import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
 
@@ -111,18 +110,6 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="focus:[&_svg]:!text-white dark:focus:[&_svg]:!text-white">
-                  <ModalCreateUser>
-                    <Button
-                      size="sm"
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4 text-white" />
-                      Tạo người dùng
-                    </Button>
-                  </ModalCreateUser>
-                </DropdownMenuItem>
-
                 <DropdownMenuItem className="[&_svg]:!text-black dark:[&_svg]:!text-white focus:[&_svg]:!text-black dark:focus:[&_svg]:!text-white dark:focus:text-white">
                   <FilterMenu />
                 </DropdownMenuItem>
