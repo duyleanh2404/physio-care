@@ -7,9 +7,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Upload } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { ControllerRenderProps } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
-import { useCreateUser } from "@/react-query/mutation/users/useCreateUser";
+import type { User } from "@/types/users";
+import { useUpdateUser } from "@/react-query/mutation/users/useUpdateUser";
 
 import {
   Form,
@@ -19,13 +21,6 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectItem,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogTitle,
@@ -38,80 +33,74 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const createUserSchema = z.object({
-  email: z.string().email("Email không hợp lệ"),
+type ModalUpdateUserProps = {
+  user: User;
+  children: React.ReactNode;
+  setIsOpenDropdown: (open: boolean) => void;
+};
+
+const updateUserSchema = z.object({
   fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-  password: z.string().min(6, "Mật khẩu tối thiểu 6 ký tự"),
-  role: z.enum(["admin", "user", "doctor"]),
   avatar: z.any().optional(),
 });
 
-type CreateUserFormValues = z.infer<typeof createUserSchema>;
+type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
 
-type ModalCreateUserProps = {
-  children: React.ReactNode;
-};
-
-export function ModalCreateUser({ children }: ModalCreateUserProps) {
+export function ModalUpdateUser({
+  user,
+  children,
+  setIsOpenDropdown,
+}: ModalUpdateUserProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(user.avatarUrl || null);
 
-  const { mutate, isPending } = useCreateUser({
+  const { mutate, isPending } = useUpdateUser({
     onSuccess: () => {
       closeModal();
     },
   });
 
-  const form = useForm<CreateUserFormValues>({
-    resolver: zodResolver(createUserSchema),
+  const form = useForm<UpdateUserFormValues>({
+    resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      email: "",
-      fullName: "",
-      password: "",
-      role: "user",
+      fullName: user.fullName,
     },
   });
 
   const closeModal = () => {
     setIsOpen(false);
-    setPreview(null);
-    form.reset();
+    setIsOpenDropdown(false);
   };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (file: File | null) => void,
+    field: ControllerRenderProps<UpdateUserFormValues, "avatar">,
   ) => {
-    const file = e.target.files?.[0] ?? null;
+    const file = e.target.files?.[0];
     if (file) {
-      onChange(file);
+      field.onChange(file);
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const onSubmit = (values: CreateUserFormValues) => {
+  const onSubmit = (values: UpdateUserFormValues) => {
     const formData = new FormData();
-    formData.append("email", values.email);
     formData.append("fullName", values.fullName);
-    formData.append("password", values.password);
-    formData.append("role", values.role);
 
     if (values.avatar instanceof File) {
       formData.append("avatar", values.avatar);
     }
 
-    mutate(formData);
+    mutate({ id: user.id, data: formData });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="h-[95vh] 2xl:h-auto overflow-y-auto">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tạo người dùng mới</DialogTitle>
-          <DialogDescription>
-            Nhập thông tin để thêm người dùng vào hệ thống.
-          </DialogDescription>
+          <DialogTitle>Cập nhật người dùng</DialogTitle>
+          <DialogDescription>Chỉnh sửa thông tin người dùng.</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -121,70 +110,12 @@ export function ModalCreateUser({ children }: ModalCreateUserProps) {
           >
             <FormField
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Nhập email" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Họ và tên</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Nhập họ và tên" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mật khẩu</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="Nhập mật khẩu"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Vai trò</FormLabel>
-                  <FormControl>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Chọn vai trò" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="doctor">Doctor</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input {...field} placeholder="Nguyễn Văn A" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -204,7 +135,7 @@ export function ModalCreateUser({ children }: ModalCreateUserProps) {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => handleFileChange(e, field.onChange)}
+                        onChange={(e) => handleFileChange(e, field)}
                       />
                       <label
                         htmlFor="avatar"
@@ -225,7 +156,7 @@ export function ModalCreateUser({ children }: ModalCreateUserProps) {
                         ) : (
                           <div className="flex flex-col items-center gap-1 text-muted-foreground group-hover:text-primary transition-smooth">
                             <Upload className="w-6 h-6" />
-                            <span className="text-xs">Chọn ảnh đại diện</span>
+                            <span className="text-xs">Chọn ảnh</span>
                           </div>
                         )}
 
@@ -253,7 +184,7 @@ export function ModalCreateUser({ children }: ModalCreateUserProps) {
               </Button>
               <Button type="submit" disabled={isPending} size="sm">
                 {isPending && <Loader2 className="size-4 animate-spin" />}
-                {isPending ? "Đang tạo..." : "Tạo"}
+                {isPending ? "Đang lưu..." : "Lưu"}
               </Button>
             </DialogFooter>
           </form>

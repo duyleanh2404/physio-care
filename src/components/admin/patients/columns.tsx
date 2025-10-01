@@ -37,8 +37,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { ModalBanUser } from "@/components/modals/admin/users/Ban";
 import { ModalUnbanUser } from "@/components/modals/admin/users/Unban";
-import { ModalUpdateUser } from "@/components/modals/admin/users/Update";
 import { ModalDeleteUser } from "@/components/modals/admin/users/Delete";
+import { ModalUpdateUser } from "@/components/modals/admin/users/patients/Update";
 import { ModalChangePassword } from "@/components/modals/admin/users/ChangePassword";
 
 export const columns: ColumnDef<User>[] = [
