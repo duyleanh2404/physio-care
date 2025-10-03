@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 
-import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
+import {
+  changePasswordSchema,
+  type ChangePasswordFormValues,
+} from "@/schemas/admin/users/change-password.schema";
 import { useUpdateUser } from "@/react-query/mutation/users/useUpdateUser";
 
 import {
@@ -30,20 +33,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const changePasswordSchema = z
-  .object({
-    password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
-    confirmPassword: z.string().min(6, "Xác nhận mật khẩu không được bỏ trống"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Mật khẩu và xác nhận mật khẩu không khớp",
-    path: ["confirmPassword"],
-  });
-
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
-
 type ModalChangePasswordProps = {
-  user: User;
+  user: UserType;
   children: React.ReactNode;
   setIsOpenDropdown: (open: boolean) => void;
 };

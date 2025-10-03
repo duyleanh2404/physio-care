@@ -3,14 +3,17 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Upload } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ControllerRenderProps } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
+import {
+  updatePatientsDoctorSchema,
+  type UpdatePatientsDoctorFormValues,
+} from "@/schemas/admin/users/patients-doctor/update-patients-doctor.schema";
 import { useUpdateUser } from "@/react-query/mutation/users/useUpdateUser";
 
 import {
@@ -33,24 +36,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-type ModalUpdateUserProps = {
-  user: User;
+type ModalUpdatePatientsDoctorProps = {
+  user: UserType;
   children: React.ReactNode;
   setIsOpenDropdown: (open: boolean) => void;
 };
 
-const updateUserSchema = z.object({
-  fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-  avatar: z.any().optional(),
-});
-
-type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
-
-export function ModalUpdateUser({
+export function ModalUpdatePatientsDoctor({
   user,
   children,
   setIsOpenDropdown,
-}: ModalUpdateUserProps) {
+}: ModalUpdatePatientsDoctorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [preview, setPreview] = useState<string | null>(user.avatarUrl || null);
 
@@ -60,8 +56,8 @@ export function ModalUpdateUser({
     },
   });
 
-  const form = useForm<UpdateUserFormValues>({
-    resolver: zodResolver(updateUserSchema),
+  const form = useForm<UpdatePatientsDoctorFormValues>({
+    resolver: zodResolver(updatePatientsDoctorSchema),
     defaultValues: {
       fullName: user.fullName,
     },
@@ -74,7 +70,7 @@ export function ModalUpdateUser({
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: ControllerRenderProps<UpdateUserFormValues, "avatar">,
+    field: ControllerRenderProps<UpdatePatientsDoctorFormValues, "avatar">,
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -83,7 +79,7 @@ export function ModalUpdateUser({
     }
   };
 
-  const onSubmit = (values: UpdateUserFormValues) => {
+  const onSubmit = (values: UpdatePatientsDoctorFormValues) => {
     const formData = new FormData();
     formData.append("fullName", values.fullName);
 

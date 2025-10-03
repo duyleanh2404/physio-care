@@ -45,7 +45,7 @@ export default function Page() {
   const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
   const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
 
-  const { data } = useUsers({
+  const { data, isFetching } = useUsers({
     page,
     role,
     limit,
@@ -143,7 +143,7 @@ export default function Page() {
         </div>
       </div>
 
-      <DataTable table={table} />
+      <DataTable table={table} isFetching={isFetching} columns={columns} />
       <TablePaginationControls table={table} />
     </div>
   );

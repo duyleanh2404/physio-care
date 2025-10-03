@@ -1,8 +1,6 @@
 import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
-import { columns } from "./users/columns";
-import type { User } from "@/types/users";
 
 import {
   TableRow,
@@ -12,8 +10,19 @@ import {
   TableHeader,
   Table as BaseTable,
 } from "@/components/ui/table";
+import { TableLoading } from "./TableLoading";
 
-export function DataTable({ table }: { table: TanstackTable<User> }) {
+type DataTableProps<T> = {
+  columns: any[];
+  isFetching: boolean;
+  table: TanstackTable<T>;
+};
+
+export function DataTable<T>({
+  table,
+  columns,
+  isFetching,
+}: DataTableProps<T>) {
   return (
     <div className="h-[calc(100vh-185px)] overflow-hidden rounded-md border overflow-y-auto">
       <BaseTable
@@ -37,7 +46,9 @@ export function DataTable({ table }: { table: TanstackTable<User> }) {
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isFetching ? (
+            <TableLoading columns={columns} />
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

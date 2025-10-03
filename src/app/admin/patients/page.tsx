@@ -17,13 +17,6 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import { UserRole } from "@/config.global";
 import { useUsers } from "@/react-query/query/users/useUsers";
 
-import { DataTable } from "@/components/admin/DataTable";
-import { SearchInput } from "@/components/admin/SearchInput";
-import { columns } from "@/components/admin/patients-doctors/columns";
-import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
-import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
-import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
-
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -31,6 +24,13 @@ import {
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+
+import { DataTable } from "@/components/admin/DataTable";
+import { SearchInput } from "@/components/admin/SearchInput";
+import { columns } from "@/components/admin/patients-doctors/columns";
+import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
+import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
+import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
 
 export default function Page() {
   const [limit, setLimit] = useQueryState(
@@ -44,7 +44,7 @@ export default function Page() {
   const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
   const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
 
-  const { data } = useUsers({
+  const { data, isFetching } = useUsers({
     page,
     limit,
     search,
@@ -121,7 +121,7 @@ export default function Page() {
         </div>
       </div>
 
-      <DataTable table={table} />
+      <DataTable table={table} isFetching={isFetching} columns={columns} />
       <TablePaginationControls table={table} />
     </div>
   );

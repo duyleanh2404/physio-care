@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import { UserStatus } from "@/config.global";
 import { formatDateTime } from "@/utils/format-date";
 
@@ -41,7 +41,7 @@ import { ModalUpdateUser } from "@/components/modals/admin/users/Update";
 import { ModalDeleteUser } from "@/components/modals/admin/users/Delete";
 import { ModalChangePassword } from "@/components/modals/admin/users/ChangePassword";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<UserType>[] = [
   {
     id: "select",
     meta: { label: "Chọn" },
@@ -161,6 +161,7 @@ export const columns: ColumnDef<User>[] = [
     header: "Vai trò",
     cell: ({ row }) => {
       const role = row.getValue("role") as string;
+
       return (
         <Badge className="capitalize text-primary bg-primary/10">{role}</Badge>
       );

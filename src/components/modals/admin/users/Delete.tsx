@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Loader2, Trash2 } from "lucide-react";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import { useDeleteUser } from "@/react-query/mutation/users/useDeleteUser";
 
 import {
@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 type ModalDeleteUserProps = {
-  user: User;
+  user: UserType;
   children: React.ReactNode;
   setIsOpenDropdown: (open: boolean) => void;
 };

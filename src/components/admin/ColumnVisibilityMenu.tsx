@@ -1,8 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import { ChevronDown, Columns, Settings2 } from "lucide-react";
 
-import type { User } from "@/types/users";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-export function ColumnVisibilityMenu({ table }: { table: Table<User> }) {
+type ColumnVisibilityMenuProps<T> = {
+  table: Table<T>;
+};
+
+export function ColumnVisibilityMenu<T>({
+  table,
+}: ColumnVisibilityMenuProps<T>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

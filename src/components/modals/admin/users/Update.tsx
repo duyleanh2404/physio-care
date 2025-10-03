@@ -3,14 +3,17 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Upload } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ControllerRenderProps } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
+import {
+  updateUserSchema,
+  type UpdateUserFormValues,
+} from "@/schemas/admin/users/update-user.schema";
 import { useUpdateUser } from "@/react-query/mutation/users/useUpdateUser";
 
 import {
@@ -41,18 +44,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type ModalUpdateUserProps = {
-  user: User;
+  user: UserType;
   children: React.ReactNode;
   setIsOpenDropdown: (open: boolean) => void;
 };
-
-const updateUserSchema = z.object({
-  fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-  role: z.enum(["doctor", "user"]),
-  avatar: z.any().optional(),
-});
-
-type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
 
 export function ModalUpdateUser({
   user,

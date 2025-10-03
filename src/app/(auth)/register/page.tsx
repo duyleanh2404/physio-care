@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAuthStore } from "@/store/use-auth.store";
-import { formSchema, type FormType } from "@/schema/auth/register/form.schema";
+import { formSchema, type FormType } from "@/schemas/auth/register/form.schema";
 
 import {
   Form,

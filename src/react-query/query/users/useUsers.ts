@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/react-query/query-keys";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import type { PaginatedResponse } from "@/types/global";
 
 export type FetchUsersParams = {
@@ -22,7 +22,7 @@ export type FetchUsersParams = {
 
 async function fetchUsers(
   params: FetchUsersParams = {},
-): Promise<PaginatedResponse<User[]>> {
+): Promise<PaginatedResponse<UserType[]>> {
   const query = new URLSearchParams();
 
   if (params.role) query.set("role", params.role);
@@ -49,7 +49,7 @@ async function fetchUsers(
 }
 
 export function useUsers(params: FetchUsersParams = {}) {
-  return useQuery<PaginatedResponse<User[]>>({
+  return useQuery<PaginatedResponse<UserType[]>>({
     retry: false,
     staleTime: 1000 * 60 * 5,
     placeholderData: (prev) => prev,

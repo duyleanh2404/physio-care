@@ -9,3 +9,9 @@ export const UserStatus = {
   INACTIVE: "inactive",
   BANNED: "banned",
 };
+
+export const RecordStatus = {
+  ACTIVE: "active",
+  COMPLETED: "completed",
+  PENDING: "pending",
+};
