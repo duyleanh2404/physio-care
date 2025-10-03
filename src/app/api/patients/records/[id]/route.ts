@@ -4,10 +4,10 @@ import { createAxios } from "@/lib/axios-server";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params;
+    const id = (await params).id;
 
     const api = await createAxios();
 
@@ -30,10 +30,10 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params;
+    const id = (await params).id;
 
     const api = await createAxios();
 
