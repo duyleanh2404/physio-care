@@ -12,17 +12,10 @@ import {
   type ColumnFiltersState,
 } from "@tanstack/react-table";
 import { Plus, MoreHorizontal } from "lucide-react";
-import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
+import { cleanParams } from "@/utils/clean-params";
 import { useUsers } from "@/react-query/query/users/useUsers";
-
-import { DataTable } from "@/components/admin/DataTable";
-import { columns } from "@/components/admin/users/columns";
-import { SearchInput } from "@/components/admin/SearchInput";
-import { FilterMenu } from "@/components/admin/users/FilterMenu";
-import { ModalCreateUser } from "@/components/modals/admin/users/Create";
-import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
-import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
+import { useUsersQueryState } from "@/nuqs/admin/users";
 
 import {
   DropdownMenu,
@@ -32,28 +25,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+import { DataTable } from "@/components/admin/DataTable";
+import { columns } from "@/components/admin/users/columns";
+import { SearchInput } from "@/components/admin/SearchInput";
+import { FilterMenu } from "@/components/admin/users/FilterMenu";
+import { ModalCreateUser } from "@/components/modals/admin/users/Create";
+import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
+import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
+
 export default function Page() {
-  const [limit, setLimit] = useQueryState(
-    "limit",
-    parseAsInteger.withDefault(10),
-  );
-  const [search] = useQueryState("search", parseAsString.withDefault(""));
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const { state: queryState, setters } = useUsersQueryState();
 
-  const [role] = useQueryState("role", parseAsString.withDefault(""));
-  const [status] = useQueryState("status", parseAsString.withDefault(""));
-  const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
-  const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
+  const filteredParams = cleanParams(queryState);
 
-  const { data, isFetching } = useUsers({
-    page,
-    role,
-    limit,
-    search,
-    status,
-    dateTo,
-    dateFrom,
-  });
+  const { data, isFetching } = useUsers(filteredParams);
 
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -69,29 +54,29 @@ export default function Page() {
       columnFilters,
       columnVisibility,
       pagination: {
-        pageSize: limit,
-        pageIndex: page - 1,
+        pageSize: queryState.limit,
+        pageIndex: queryState.page - 1,
       },
     },
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function"
-          ? updater({ pageIndex: page - 1, pageSize: limit })
+          ? updater({
+              pageIndex: queryState.page - 1,
+              pageSize: queryState.limit,
+            })
           : updater;
-      setPage(next.pageIndex + 1);
-      setLimit(next.pageSize);
+      setters.setPage(next.pageIndex + 1);
+      setters.setLimit(next.pageSize);
     },
   });
 
@@ -108,7 +93,6 @@ export default function Page() {
                 Tạo người dùng
               </Button>
             </ModalCreateUser>
-
             <FilterMenu />
           </div>
 
@@ -120,7 +104,7 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="focus:[&_svg]:!text-white dark:focus:[&_svg]:!text-white">
+                <DropdownMenuItem>
                   <ModalCreateUser>
                     <Button
                       size="sm"
@@ -131,8 +115,7 @@ export default function Page() {
                     </Button>
                   </ModalCreateUser>
                 </DropdownMenuItem>
-
-                <DropdownMenuItem className="[&_svg]:!text-black dark:[&_svg]:!text-white focus:[&_svg]:!text-black dark:focus:[&_svg]:!text-white dark:focus:text-white">
+                <DropdownMenuItem>
                   <FilterMenu />
                 </DropdownMenuItem>
               </DropdownMenuContent>
