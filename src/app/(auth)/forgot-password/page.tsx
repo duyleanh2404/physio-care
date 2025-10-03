@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   formSchema,
   type FormType,
-} from "@/schema/auth/forgot-password/form.schema";
+} from "@/schemas/auth/forgot-password/form.schema";
 import { useAuthStore } from "@/store/use-auth.store";
 
 import {
@@ -52,11 +52,7 @@ export default function Page() {
         return;
       }
 
-      Toast(
-        "success",
-        "OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư",
-      );
-
+      Toast("success", "OTP đã được gửi tới email của bạn");
       setResetPasswordStep(true);
 
       router.push(`/reset-password?email=${encodeURIComponent(data.email)}`);

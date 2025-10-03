@@ -3,12 +3,15 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Upload } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
+import {
+  createUserSchema,
+  type CreateUserFormValues,
+} from "@/schemas/admin/users/create-user.schema";
 import { useCreateUser } from "@/react-query/mutation/users/useCreateUser";
 
 import {
@@ -37,16 +40,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const createUserSchema = z.object({
-  email: z.string().email("Email không hợp lệ"),
-  fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-  password: z.string().min(6, "Mật khẩu tối thiểu 6 ký tự"),
-  role: z.enum(["admin", "user", "doctor"]),
-  avatar: z.any().optional(),
-});
-
-type CreateUserFormValues = z.infer<typeof createUserSchema>;
 
 type ModalCreateUserProps = {
   children: React.ReactNode;

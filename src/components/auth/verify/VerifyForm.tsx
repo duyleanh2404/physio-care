@@ -7,7 +7,8 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { formSchema, type FormType } from "@/schema/auth/verify/form.schema";
+import { useCountdown } from "@/hooks/use-countdown";
+import { formSchema, type FormType } from "@/schemas/auth/verify/form.schema";
 
 import {
   Form,
@@ -28,6 +29,8 @@ import { Button } from "@/components/ui/button";
 export function VerifyForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const { timeLeft, start, isCounting } = useCountdown(60);
 
   const email = searchParams.get("email") || "";
   const [isResending, setIsResending] = useState(false);
@@ -50,11 +53,11 @@ export function VerifyForm() {
 
       if (!res.ok) {
         Toast("error", "Gửi lại OTP thất bại");
-        setIsResending(false);
         return;
       }
 
       Toast("success", "OTP đã được gửi lại vào email của bạn");
+      start();
     } catch {
       Toast("error", "Lỗi hệ thống, vui lòng thử lại sau");
     } finally {
@@ -91,10 +94,14 @@ export function VerifyForm() {
           <button
             type="button"
             onClick={resendOtp}
-            disabled={isResending}
-            className="text-primary hover:underline cursor-pointer"
+            disabled={isResending || isCounting}
+            className="text-primary hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isResending ? "Đang gửi..." : "Gửi lại ngay!"}
+            {isResending
+              ? "Đang gửi..."
+              : isCounting
+                ? `Gửi lại sau ${timeLeft}s`
+                : "Gửi lại ngay!"}
           </button>
         </div>
       </div>
@@ -111,7 +118,12 @@ export function VerifyForm() {
               <FormItem>
                 <FormLabel>Mã xác thực</FormLabel>
                 <FormControl>
-                  <InputOTP maxLength={6} {...field} className="w-full">
+                  <InputOTP
+                    autoFocus
+                    {...field}
+                    maxLength={6}
+                    className="w-full"
+                  >
                     <InputOTPGroup className="w-full flex">
                       <InputOTPSlot index={0} className="flex-1 h-16" />
                       <InputOTPSlot index={1} className="flex-1 h-16" />

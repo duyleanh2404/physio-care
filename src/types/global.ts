@@ -5,3 +5,9 @@ export type PaginatedResponse<T> = {
   totalPages: number;
   data: T;
 };
+
+export type AttachmentDataType =
+  | ArrayBuffer
+  | number[]
+  | { data: number[] }
+  | Uint8Array;

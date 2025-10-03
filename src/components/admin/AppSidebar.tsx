@@ -53,7 +53,7 @@ const data = {
       icon: User,
       items: [
         { title: "Danh sách bệnh nhân", url: "/admin/patients" },
-        { title: "Hồ sơ bệnh án", url: "/admin/patients/records" },
+        { title: "Danh sách hồ sơ bệnh án", url: "/admin/patients/records" },
       ],
     },
     {

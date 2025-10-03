@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   formSchema,
   type FormType,
-} from "@/schema/auth/reset-password/form.schema";
+} from "@/schemas/auth/reset-password/form.schema";
 
 import {
   Form,
@@ -92,7 +92,12 @@ export function ResetPasswordForm() {
               <FormItem>
                 <FormLabel>Mã xác thực</FormLabel>
                 <FormControl>
-                  <InputOTP maxLength={6} {...field} className="w-full">
+                  <InputOTP
+                    autoFocus
+                    {...field}
+                    maxLength={6}
+                    className="w-full"
+                  >
                     <InputOTPGroup className="w-full flex">
                       <InputOTPSlot index={0} className="flex-1 h-16" />
                       <InputOTPSlot index={1} className="flex-1 h-16" />

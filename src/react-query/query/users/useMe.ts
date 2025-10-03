@@ -2,10 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import { queryKeys } from "@/react-query/query-keys";
 
-async function fetchMe(): Promise<User> {
+async function fetchMe(): Promise<UserType> {
   const res = await fetch("/api/users/me", {
     method: "GET",
     credentials: "include",
@@ -19,7 +19,7 @@ async function fetchMe(): Promise<User> {
 }
 
 export function useMe() {
-  return useQuery<User>({
+  return useQuery<UserType>({
     queryKey: queryKeys.users.me,
     queryFn: fetchMe,
     retry: false,

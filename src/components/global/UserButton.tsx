@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import { UserRole } from "@/config.global";
 import { queryKeys } from "@/react-query/query-keys";
 import { useAuthStore } from "@/store/use-auth.store";
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function UserButton({ user }: { user: User }) {
+export function UserButton({ user }: { user: UserType }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -51,7 +51,7 @@ export function UserButton({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="size-8.5">
+        <Avatar className="size-9">
           <AvatarImage src={user.avatarUrl ?? undefined} />
           <AvatarFallback>
             {user.fullName.charAt(0).toUpperCase()}

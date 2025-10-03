@@ -6,8 +6,6 @@ import {
 } from "lucide-react";
 import type { Table } from "@tanstack/react-table";
 
-import type { User } from "@/types/users";
-
 import {
   Select,
   SelectItem,
@@ -18,7 +16,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-export function TablePaginationControls({ table }: { table: Table<User> }) {
+type TablePaginationControlsProps<T> = {
+  table: Table<T>;
+};
+
+export function TablePaginationControls<T>({
+  table,
+}: TablePaginationControlsProps<T>) {
   return (
     <div className="flex items-center justify-between py-3">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">

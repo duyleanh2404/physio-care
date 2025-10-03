@@ -109,7 +109,7 @@ export function FilterMenu() {
               "text-primary hover:text-primary !bg-primary/20",
           )}
         >
-          <Filter className="w-4 h-4 dark:text-white transition-smooth" />
+          <Filter className="size-3.5 dark:text-white transition-smooth" />
           Lọc
         </Button>
       </DropdownMenuTrigger>

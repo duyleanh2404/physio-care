@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { UserRole } from "@/config.global";
 import { useAuthStore } from "@/store/use-auth.store";
-import { formSchema, type FormType } from "@/schema/auth/login/form.schema";
+import { formSchema, type FormType } from "@/schemas/auth/login/form.schema";
 
 import {
   Form,

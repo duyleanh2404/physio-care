@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { User } from "@/types/users";
+import type { UserType } from "@/types/users";
 import { UserStatus } from "@/config.global";
 import { formatDateTime } from "@/utils/format-date";
 
@@ -39,9 +39,9 @@ import { ModalBanUser } from "@/components/modals/admin/users/Ban";
 import { ModalUnbanUser } from "@/components/modals/admin/users/Unban";
 import { ModalDeleteUser } from "@/components/modals/admin/users/Delete";
 import { ModalChangePassword } from "@/components/modals/admin/users/ChangePassword";
-import { ModalUpdateUser } from "@/components/modals/admin/users/patients-doctors/Update";
+import { ModalUpdatePatientsDoctor } from "@/components/modals/admin/users/patients-doctor/Update";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<UserType>[] = [
   {
     id: "select",
     meta: { label: "Chọn" },
@@ -202,12 +202,15 @@ export const columns: ColumnDef<User>[] = [
               Sao chép ID
             </DropdownMenuItem>
 
-            <ModalUpdateUser user={user} setIsOpenDropdown={setIsOpenDropdown}>
+            <ModalUpdatePatientsDoctor
+              user={user}
+              setIsOpenDropdown={setIsOpenDropdown}
+            >
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <Edit className="w-4 h-4 transition-smooth" />
                 Chỉnh sửa
               </DropdownMenuItem>
-            </ModalUpdateUser>
+            </ModalUpdatePatientsDoctor>
 
             <ModalChangePassword
               user={user}
