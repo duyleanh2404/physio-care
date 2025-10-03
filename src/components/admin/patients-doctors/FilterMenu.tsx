@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 
-import { useQueryState } from "nuqs";
-import { parseAsString } from "nuqs";
-
 import { Filter } from "lucide-react";
 import { formatISO, startOfDay } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { STATUS_OPTIONS } from "@/constants/filters/users";
+import { useUsersQueryState } from "@/nuqs/admin/users";
 
 import {
   DropdownMenu,
@@ -24,16 +22,7 @@ import { RangeCalendar } from "@/components/ui/range-calendar";
 export function FilterMenu() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [status, setStatus] = useQueryState(
-    "status",
-    parseAsString.withDefault(""),
-  );
-
-  const [dateTo, setDateTo] = useQueryState(
-    "dateTo",
-    parseAsString.withDefault(""),
-  );
-  const [dateFrom, setDateFrom] = useQueryState("dateFrom", parseAsString);
+  const { state, setters } = useUsersQueryState();
 
   const toggleFilter = (
     currentValue: string,
@@ -48,10 +37,12 @@ export function FilterMenu() {
   };
 
   const handleDateChange = (from: Date | undefined, to: Date | undefined) => {
-    setDateFrom(
+    setters.setDateFrom(
       from ? formatISO(startOfDay(from), { representation: "date" }) : "",
     );
-    setDateTo(to ? formatISO(startOfDay(to), { representation: "date" }) : "");
+    setters.setDateTo(
+      to ? formatISO(startOfDay(to), { representation: "date" }) : "",
+    );
   };
 
   const renderCheckboxGroup = (
@@ -87,13 +78,15 @@ export function FilterMenu() {
   );
 
   const clearFilters = () => {
-    setStatus(null);
-    setDateTo(null);
-    setDateFrom(null);
+    setters.setStatus("");
+    setters.setDateTo("");
+    setters.setDateFrom("");
     setIsOpen(false);
   };
 
-  const hasActiveFilters = Boolean(status || dateFrom || dateTo);
+  const hasActiveFilters = Boolean(
+    state.status || state.dateFrom || state.dateTo,
+  );
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -117,15 +110,20 @@ export function FilterMenu() {
         style={{ maxWidth: "fit-content" }}
         className="p-6 grid grid-cols-1 sm:grid-cols-[auto_auto] gap-y-6 gap-x-12"
       >
-        {renderCheckboxGroup("Trạng thái", STATUS_OPTIONS, status, setStatus)}
+        {renderCheckboxGroup(
+          "Trạng thái",
+          STATUS_OPTIONS,
+          state.status,
+          setters.setStatus,
+        )}
 
         <div className="flex flex-col flex-shrink-0">
           <DropdownMenuLabel className="text-sm font-semibold px-0">
             Ngày tạo
           </DropdownMenuLabel>
           <RangeCalendar
-            dateTo={dateTo}
-            dateFrom={dateFrom}
+            dateTo={state.dateTo}
+            dateFrom={state.dateFrom}
             onDateChange={handleDateChange}
           />
         </div>

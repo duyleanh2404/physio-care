@@ -12,17 +12,10 @@ import {
   type ColumnFiltersState,
 } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
-import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
+import { cleanParams } from "@/utils/clean-params";
+import { useRecordsQueryState } from "@/nuqs/admin/records";
 import { useRecords } from "@/react-query/query/users/patients/records/useRecords";
-
-import { DataTable } from "@/components/admin/DataTable";
-import { SearchInput } from "@/components/admin/SearchInput";
-import { columns } from "@/components/admin/patients/records/columns";
-import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
-import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
-import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
-import { ModalCreateRecord } from "@/components/modals/admin/users/patients/records/Create";
 
 import {
   DropdownMenu,
@@ -32,19 +25,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+import { DataTable } from "@/components/admin/DataTable";
+import { SearchInput } from "@/components/admin/SearchInput";
+import { columns } from "@/components/admin/patients/records/columns";
+import { FilterMenu } from "@/components/admin/patients/records/FilterMenu";
+import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
+import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
+import { ModalCreateRecord } from "@/components/modals/admin/users/patients/records/Create";
+
 export default function Page() {
-  const [limit, setLimit] = useQueryState(
-    "limit",
-    parseAsInteger.withDefault(10),
-  );
-  const [search] = useQueryState("search", parseAsString.withDefault(""));
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const { state: queryState, setters } = useRecordsQueryState();
 
-  const [status] = useQueryState("status", parseAsString.withDefault(""));
-  const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
-  const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
+  const filteredParams = cleanParams({
+    ...queryState,
+    sortOrder: queryState.sortOrder as "asc" | "desc" | undefined,
+  });
 
-  const { data, isFetching } = useRecords();
+  const { data, isFetching } = useRecords(filteredParams);
 
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -60,29 +57,29 @@ export default function Page() {
       columnFilters,
       columnVisibility,
       pagination: {
-        pageSize: limit,
-        pageIndex: page - 1,
+        pageSize: queryState.limit,
+        pageIndex: queryState.page - 1,
       },
     },
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function"
-          ? updater({ pageIndex: page - 1, pageSize: limit })
+          ? updater({
+              pageIndex: queryState.page - 1,
+              pageSize: queryState.limit,
+            })
           : updater;
-      setPage(next.pageIndex + 1);
-      setLimit(next.pageSize);
+      setters.page(next.pageIndex + 1);
+      setters.limit(next.pageSize);
     },
   });
 
@@ -99,7 +96,6 @@ export default function Page() {
                 Tạo hồ sơ
               </Button>
             </ModalCreateRecord>
-
             <FilterMenu />
           </div>
 
@@ -111,7 +107,7 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="focus:[&_svg]:!text-white dark:focus:[&_svg]:!text-white">
+                <DropdownMenuItem>
                   <ModalCreateRecord>
                     <Button
                       size="sm"
@@ -122,8 +118,7 @@ export default function Page() {
                     </Button>
                   </ModalCreateRecord>
                 </DropdownMenuItem>
-
-                <DropdownMenuItem className="[&_svg]:!text-black dark:[&_svg]:!text-white focus:[&_svg]:!text-black dark:focus:[&_svg]:!text-white dark:focus:text-white">
+                <DropdownMenuItem>
                   <FilterMenu />
                 </DropdownMenuItem>
               </DropdownMenuContent>

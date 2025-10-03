@@ -27,6 +27,7 @@ import { Toast } from "@/components/ui/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import { RecordSheet } from "./RecordSheet";
 import { Hint } from "@/components/global/Hint";
 import { ModalUpdateRecord } from "@/components/modals/admin/users/patients/records/Update";
 import { ModalDeleteRecord } from "@/components/modals/admin/users/patients/records/Delete";
@@ -36,7 +37,7 @@ export const columns: ColumnDef<RecordType>[] = [
     accessorKey: "id",
     meta: { label: "Mã hồ sơ" },
     header: () => <div>Mã hồ sơ</div>,
-    cell: ({ row }) => <div>{row.original.recordCode}</div>,
+    cell: ({ row }) => <RecordSheet record={row.original} />,
   },
   {
     id: "patient",

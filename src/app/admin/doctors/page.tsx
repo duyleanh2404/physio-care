@@ -12,17 +12,11 @@ import {
   type ColumnFiltersState,
 } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 import { UserRole } from "@/config.global";
+import { cleanParams } from "@/utils/clean-params";
 import { useUsers } from "@/react-query/query/users/useUsers";
-
-import { DataTable } from "@/components/admin/DataTable";
-import { SearchInput } from "@/components/admin/SearchInput";
-import { columns } from "@/components/admin/patients-doctors/columns";
-import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
-import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
-import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
+import { useUsersQueryState } from "@/nuqs/admin/users";
 
 import {
   DropdownMenu,
@@ -32,25 +26,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-export default function Page() {
-  const [limit, setLimit] = useQueryState(
-    "limit",
-    parseAsInteger.withDefault(10),
-  );
-  const [search] = useQueryState("search", parseAsString.withDefault(""));
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+import { DataTable } from "@/components/admin/DataTable";
+import { SearchInput } from "@/components/admin/SearchInput";
+import { columns } from "@/components/admin/patients-doctors/columns";
+import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
+import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
+import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
 
-  const [status] = useQueryState("status", parseAsString.withDefault(""));
-  const [dateTo] = useQueryState("dateTo", parseAsString.withDefault(""));
-  const [dateFrom] = useQueryState("dateFrom", parseAsString.withDefault(""));
+export default function Page() {
+  const { state: queryState, setters } = useUsersQueryState();
+
+  const filteredParams = cleanParams(queryState);
 
   const { data, isFetching } = useUsers({
-    page,
-    limit,
-    search,
-    status,
-    dateTo,
-    dateFrom,
+    ...filteredParams,
     role: UserRole.DOCTOR,
   });
 
@@ -68,29 +57,29 @@ export default function Page() {
       columnFilters,
       columnVisibility,
       pagination: {
-        pageSize: limit,
-        pageIndex: page - 1,
+        pageSize: queryState.limit,
+        pageIndex: queryState.page - 1,
       },
     },
     manualPagination: true,
     pageCount: data?.totalPages ?? -1,
-
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function"
-          ? updater({ pageIndex: page - 1, pageSize: limit })
+          ? updater({
+              pageIndex: queryState.page - 1,
+              pageSize: queryState.limit,
+            })
           : updater;
-      setPage(next.pageIndex + 1);
-      setLimit(next.pageSize);
+      setters.setPage(next.pageIndex + 1);
+      setters.setLimit(next.pageSize);
     },
   });
 
@@ -110,7 +99,7 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="[&_svg]:!text-black dark:[&_svg]:!text-white focus:[&_svg]:!text-black dark:focus:[&_svg]:!text-white dark:focus:text-white">
+                <DropdownMenuItem>
                   <FilterMenu />
                 </DropdownMenuItem>
               </DropdownMenuContent>

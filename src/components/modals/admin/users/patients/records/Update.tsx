@@ -14,8 +14,12 @@ import {
   type UpdateRecordFormValues,
 } from "@/schemas/admin/users/patients/update-record.schema";
 import { toFileFromAttachment } from "@/utils/to-file-from-attachment";
-import { TREATMENT_OPTIONS } from "@/constants/patients/record/treatment-options";
 import { useUpdateMedicalRecord } from "@/react-query/mutation/users/patients/useUpdateMedicalRecord";
+
+import { STATUS_OPTIONS } from "@/constants/records/status-options";
+import { INTENSITY_OPTIONS } from "@/constants/records/intensity-options";
+import { TREATMENT_FREQUENCY_OPTIONS } from "@/constants/records/treatment-frequency";
+import { TREATMENT_OPTIONS } from "@/constants/filters/patients/record/treatment-options";
 
 import { FileIcon } from "@/components/global/FileIcon";
 import { SelectDoctorsWithSearch } from "@/components/global/SelectDoctorsWithSearch";
@@ -94,6 +98,7 @@ export function ModalUpdateRecord({
     if (record) {
       form.reset({
         goals: record.goals,
+        status: record.status,
         history: record.history,
         progress: record.progress,
         doctorId: record.doctorId,
@@ -101,7 +106,6 @@ export function ModalUpdateRecord({
         intensity: record.intensity,
         patientsId: record.patientsId,
         treatmentType: record.treatmentType,
-        status: record.status,
       });
 
       setIsOtherTreatment(record.treatmentType === "Khác");
@@ -189,9 +193,11 @@ export function ModalUpdateRecord({
                           <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="active">Đang điều trị</SelectItem>
-                          <SelectItem value="completed">Hoàn tất</SelectItem>
-                          <SelectItem value="pending">Tạm dừng</SelectItem>
+                          {STATUS_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -247,23 +253,15 @@ export function ModalUpdateRecord({
                         }}
                         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
                       >
-                        {TREATMENT_OPTIONS.map((option) => {
-                          const isSelected = field.value === option;
-
-                          return (
-                            <Label
-                              key={option}
-                              className={cn(
-                                "flex items-center space-x-2 hover:border-primary hover:ring-[3px] hover:ring-primary/50 cursor-pointer p-2 border rounded-lg transition-smooth",
-                                isSelected &&
-                                  "border-primary ring-[3px] ring-primary/50",
-                              )}
-                            >
-                              <RadioGroupItem value={option} />
-                              <span>{option}</span>
-                            </Label>
-                          );
-                        })}
+                        {TREATMENT_OPTIONS.map((option) => (
+                          <Label
+                            key={option}
+                            className="flex items-center space-x-2"
+                          >
+                            <RadioGroupItem value={option} />
+                            <span>{option}</span>
+                          </Label>
+                        ))}
                       </RadioGroup>
 
                       {isOtherTreatment && (
@@ -290,10 +288,27 @@ export function ModalUpdateRecord({
                 <FormItem>
                   <FormLabel>Cường độ trị liệu</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Ví dụ: Nhẹ, Trung bình, Cao"
-                    />
+                    <RadioGroup
+                      defaultValue="Nhẹ"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-row space-x-6"
+                    >
+                      {INTENSITY_OPTIONS.map((option) => (
+                        <div
+                          key={option}
+                          className="flex items-center space-x-2"
+                        >
+                          <RadioGroupItem
+                            value={option}
+                            id={`intensity-${option}`}
+                          />
+                          <Label htmlFor={`intensity-${option}`}>
+                            {option}
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </FormItem>
               )}
@@ -306,8 +321,20 @@ export function ModalUpdateRecord({
                 <FormItem>
                   <FormLabel>Tần suất trị liệu</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Ví dụ: 3 lần/tuần" />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn tần suất" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TREATMENT_FREQUENCY_OPTIONS.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

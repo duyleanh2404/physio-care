@@ -6,14 +6,17 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { cn } from "@/lib/utils";
 import { RecordStatus } from "@/config.global";
 import {
   createRecordSchema,
   type CreateRecordFormValues,
 } from "@/schemas/admin/users/patients/create-record.schema";
-import { TREATMENT_OPTIONS } from "@/constants/patients/record/treatment-options";
 import { useCreateMedicalRecord } from "@/react-query/mutation/users/patients/useCreateMedicalRecord";
+
+import { STATUS_OPTIONS } from "@/constants/records/status-options";
+import { INTENSITY_OPTIONS } from "@/constants/records/intensity-options";
+import { TREATMENT_FREQUENCY_OPTIONS } from "@/constants/records/treatment-frequency";
+import { TREATMENT_OPTIONS } from "@/constants/filters/patients/record/treatment-options";
 
 import { FileIcon } from "@/components/global/FileIcon";
 import { SelectDoctorsWithSearch } from "@/components/global/SelectDoctorsWithSearch";
@@ -146,9 +149,11 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                           <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="active">Đang điều trị</SelectItem>
-                          <SelectItem value="completed">Hoàn tất</SelectItem>
-                          <SelectItem value="pending">Tạm dừng</SelectItem>
+                          {STATUS_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -173,6 +178,7 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                 )}
               />
             </div>
+
             <FormField
               control={form.control}
               name="history"
@@ -185,6 +191,7 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="treatmentType"
@@ -202,23 +209,15 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                         }}
                         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
                       >
-                        {TREATMENT_OPTIONS.map((option) => {
-                          const isSelected = field.value === option;
-
-                          return (
-                            <Label
-                              key={option}
-                              className={cn(
-                                "flex items-center space-x-2 hover:border-primary hover:ring-[3px] hover:ring-primary/50 cursor-pointer p-2 border rounded-lg transition-smooth",
-                                isSelected &&
-                                  "border-primary ring-[3px] ring-primary/50",
-                              )}
-                            >
-                              <RadioGroupItem value={option} />
-                              <span>{option}</span>
-                            </Label>
-                          );
-                        })}
+                        {TREATMENT_OPTIONS.map((option) => (
+                          <Label
+                            key={option}
+                            className="flex items-center space-x-2"
+                          >
+                            <RadioGroupItem value={option} />
+                            <span>{option}</span>
+                          </Label>
+                        ))}
                       </RadioGroup>
 
                       {isOtherTreatment && (
@@ -237,6 +236,7 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="intensity"
@@ -244,14 +244,31 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                 <FormItem>
                   <FormLabel>Cường độ trị liệu</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Ví dụ: Nhẹ, Trung bình, Cao"
-                    />
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-row space-x-6"
+                    >
+                      {INTENSITY_OPTIONS.map((option) => (
+                        <div
+                          key={option}
+                          className="flex items-center space-x-2"
+                        >
+                          <RadioGroupItem
+                            value={option}
+                            id={`intensity-${option}`}
+                          />
+                          <Label htmlFor={`intensity-${option}`}>
+                            {option}
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="frequency"
@@ -259,11 +276,23 @@ export function ModalCreateRecord({ children }: { children: React.ReactNode }) {
                 <FormItem>
                   <FormLabel>Tần suất trị liệu</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Ví dụ: 3 lần/tuần" />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn tần suất" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TREATMENT_FREQUENCY_OPTIONS.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="goals"
