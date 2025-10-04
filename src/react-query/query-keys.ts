@@ -6,6 +6,9 @@ export const queryKeys = {
   records: {
     list: (params?: Record<string, any>) =>
       ["records", "list", params] as const,
-    file: (id: string) => ["records", "file", id] as const,
+  },
+  specialties: {
+    list: (params?: Record<string, any>) =>
+      ["specialties", "list", params] as const,
   },
 };

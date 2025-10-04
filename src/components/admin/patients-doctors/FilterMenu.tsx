@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ButtonClearFilters } from "../ButtonClearFilters";
 import { RangeCalendar } from "@/components/ui/range-calendar";
 
 export function FilterMenu() {
@@ -100,7 +101,12 @@ export function FilterMenu() {
               "text-primary hover:text-primary !bg-primary/20",
           )}
         >
-          <Filter className="size-3.5 dark:text-white transition-smooth" />
+          <Filter
+            className={cn(
+              "size-3.5 dark:text-white transition-smooth",
+              hasActiveFilters && "text-primary dark:text-primary",
+            )}
+          />
           Lọc
         </Button>
       </DropdownMenuTrigger>
@@ -128,19 +134,7 @@ export function FilterMenu() {
           />
         </div>
 
-        {hasActiveFilters && (
-          <div className="col-span-full flex justify-end">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={clearFilters}
-              className="flex items-center gap-2 text-red-500 hover:text-red-500 !bg-red-500/10 hover:!bg-red-500/20"
-            >
-              <Filter className="w-4 h-4 text-red-500" />
-              Xóa bộ lọc
-            </Button>
-          </div>
-        )}
+        {hasActiveFilters && <ButtonClearFilters clearFilters={clearFilters} />}
       </DropdownMenuContent>
     </DropdownMenu>
   );
