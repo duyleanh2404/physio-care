@@ -11,11 +11,11 @@ import {
   type VisibilityState,
   type ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Plus, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Plus } from "lucide-react";
 
 import { cleanParams } from "@/utils/clean-params";
-import { useUsers } from "@/react-query/query/users/useUsers";
-import { useUsersQueryState } from "@/nuqs/admin/users";
+import { useSpecialtiesQueryState } from "@/nuqs/admin/specialties";
+import { useSpecialties } from "@/react-query/query/users/doctors/specialties/useSpecialties";
 
 import {
   DropdownMenu,
@@ -26,19 +26,21 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { DataTable } from "@/components/admin/DataTable";
-import { columns } from "@/components/admin/users/columns";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { FilterMenu } from "@/components/admin/users/FilterMenu";
-import { ModalCreateUser } from "@/components/modals/admin/users/Create";
+import { columns } from "@/components/admin/doctors/specialties/columns";
+import { FilterMenu } from "@/components/admin/doctors/specialties/FilterMenu";
 import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
 import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
+import { ModalCreateSpecialties } from "@/components/modals/admin/users/doctors/specialties/Create";
 
 export default function Page() {
-  const { state: queryState, setters } = useUsersQueryState();
+  const { state: queryState, setters } = useSpecialtiesQueryState();
 
   const filteredParams = cleanParams(queryState);
 
-  const { data, isFetching } = useUsers(filteredParams);
+  const { data, isFetching } = useSpecialties({
+    ...filteredParams,
+  });
 
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -83,16 +85,16 @@ export default function Page() {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2 py-4">
-        <SearchInput placeholder="Tìm kiếm theo tên người dùng" />
+        <SearchInput placeholder="Tìm kiếm theo tên chuyên khoa" />
 
         <div className="flex items-center flex-row md:flex-row-reverse lg:flex-row gap-2 ml-auto">
           <div className="hidden lg:flex items-center gap-2">
-            <ModalCreateUser>
+            <ModalCreateSpecialties>
               <Button size="sm" className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
-                Thêm người dùng
+                Thêm chuyên khoa
               </Button>
-            </ModalCreateUser>
+            </ModalCreateSpecialties>
             <FilterMenu />
           </div>
 
@@ -104,17 +106,6 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <ModalCreateUser>
-                    <Button
-                      size="sm"
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4 text-white" />
-                      Tạo người dùng
-                    </Button>
-                  </ModalCreateUser>
-                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <FilterMenu />
                 </DropdownMenuItem>

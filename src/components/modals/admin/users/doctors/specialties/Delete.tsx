@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { Loader2, Trash2 } from "lucide-react";
 
-import type { RecordType } from "@/types/records";
-import { useDeleteRecord } from "@/react-query/mutation/users/patients/useDeleteMedicalRecord";
+import type { SpecialtyType } from "@/types/specialties";
+import { useDeleteSpecialty } from "@/react-query/mutation/users/doctors/specialties/useDeleteSpecialty";
 
 import {
   Dialog,
@@ -18,20 +18,20 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-type ModalDeleteRecordProps = {
-  record: RecordType;
+type ModalDeleteSpecialtyProps = {
+  specialty: SpecialtyType;
   children: React.ReactNode;
   setIsOpenDropdown: (open: boolean) => void;
 };
 
-export function ModalDeleteRecord({
-  record,
+export function ModalDeleteSpecialty({
+  specialty,
   children,
   setIsOpenDropdown,
-}: ModalDeleteRecordProps) {
+}: ModalDeleteSpecialtyProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { mutate, isPending } = useDeleteRecord({
+  const { mutate, isPending } = useDeleteSpecialty({
     onSuccess: () => closeModal(),
   });
 
@@ -41,7 +41,7 @@ export function ModalDeleteRecord({
   };
 
   const handleDelete = () => {
-    mutate(record.id);
+    mutate(specialty.id);
   };
 
   return (
@@ -49,11 +49,11 @@ export function ModalDeleteRecord({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Xóa hồ sơ vật lý trị liệu</DialogTitle>
+          <DialogTitle>Xóa chuyên khoa</DialogTitle>
           <DialogDescription>
-            Bạn có chắc chắn muốn xóa hồ sơ của{" "}
+            Bạn có chắc chắn muốn xóa chuyên khoa{" "}
             <span className="font-semibold text-foreground">
-              {record.patient.fullName}
+              {specialty.name}
             </span>
             ? Hành động này không thể hoàn tác.
           </DialogDescription>

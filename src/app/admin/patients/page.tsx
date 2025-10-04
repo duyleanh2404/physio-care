@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,7 +11,7 @@ import {
   type VisibilityState,
   type ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Plus, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 import { UserRole } from "@/config.global";
 import { cleanParams } from "@/utils/clean-params";
@@ -28,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/admin/DataTable";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { columns } from "@/components/admin/patients-doctors/columns";
-import { ModalCreateUser } from "@/components/modals/admin/users/Create";
 import { FilterMenu } from "@/components/admin/patients-doctors/FilterMenu";
 import { ColumnVisibilityMenu } from "@/components/admin/ColumnVisibilityMenu";
 import { TablePaginationControls } from "@/components/admin/TablePaginationControls";
@@ -62,13 +62,13 @@ export default function Page() {
       },
     },
     manualPagination: true,
+    onSortingChange: setSorting,
     pageCount: data?.totalPages ?? -1,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
+    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updater) => {
       const next =
@@ -89,15 +89,7 @@ export default function Page() {
         <SearchInput placeholder="Tìm kiếm theo tên bệnh nhân" />
 
         <div className="flex items-center flex-row md:flex-row-reverse lg:flex-row gap-2 ml-auto">
-          <div className="hidden lg:flex items-center gap-2">
-            <ModalCreateUser>
-              <Button size="sm" className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Tạo bệnh nhân
-              </Button>
-            </ModalCreateUser>
-            <FilterMenu />
-          </div>
+          <FilterMenu />
 
           <div className="flex lg:hidden">
             <DropdownMenu>
@@ -107,17 +99,6 @@ export default function Page() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <ModalCreateUser>
-                    <Button
-                      size="sm"
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4 text-white" />
-                      Tạo bệnh nhân
-                    </Button>
-                  </ModalCreateUser>
-                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <FilterMenu />
                 </DropdownMenuItem>

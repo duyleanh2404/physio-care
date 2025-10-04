@@ -62,13 +62,13 @@ export default function Page() {
       },
     },
     manualPagination: true,
+    onSortingChange: setSorting,
     pageCount: data?.totalPages ?? -1,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
+    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updater) => {
       const next =

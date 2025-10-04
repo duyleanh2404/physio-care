@@ -15,8 +15,8 @@ import { MoreHorizontal } from "lucide-react";
 
 import { UserRole } from "@/config.global";
 import { cleanParams } from "@/utils/clean-params";
-import { useUsers } from "@/react-query/query/users/useUsers";
 import { useUsersQueryState } from "@/nuqs/admin/users";
+import { useUsers } from "@/react-query/query/users/useUsers";
 
 import {
   DropdownMenu,
@@ -62,13 +62,13 @@ export default function Page() {
       },
     },
     manualPagination: true,
+    onSortingChange: setSorting,
     pageCount: data?.totalPages ?? -1,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
+    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updater) => {
       const next =

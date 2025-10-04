@@ -14,6 +14,8 @@ import {
 import type { RecordType } from "@/types/records";
 import { formatDateTime } from "@/utils/format-date";
 
+import { Hint } from "@/components/global/Hint";
+
 import { DetailItem } from "./DetailItem";
 import { QuickInfoCard } from "./QuickInfoCard";
 
@@ -53,14 +55,16 @@ export function RecordSheet({ record }: { record: RecordType }) {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="link"
-          className="p-0 hover:text-primary text-sm font-medium hover:underline underline-offset-4"
-        >
-          {record.recordCode}
-        </Button>
-      </SheetTrigger>
+      <Hint content="Xem chi tiết">
+        <SheetTrigger asChild>
+          <Button
+            variant="link"
+            className="p-0 text-white hover:text-primary text-sm font-medium hover:no-underline"
+          >
+            {record.recordCode}
+          </Button>
+        </SheetTrigger>
+      </Hint>
 
       <SheetContent className="min-w-[500px] overflow-y-auto">
         <SheetHeader className="space-y-2 pb-4 border-b">
